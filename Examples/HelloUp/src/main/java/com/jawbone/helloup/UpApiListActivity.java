@@ -9,19 +9,12 @@ import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +35,8 @@ public class UpApiListActivity extends Activity {
 
     private static final String TAG = UpApiListActivity.class.getSimpleName();
 
-    static  public String str ;
+    public static String str ;
+    public static String str_step;
 
     private String mAccessToken;
     private String mClientSecret;
@@ -58,13 +52,6 @@ public class UpApiListActivity extends Activity {
             mClientSecret = intent.getStringExtra(UpPlatformSdkConstants.CLIENT_SECRET);
         }
 
-        ApiManager.getRestApiInterface().getMoveEventsList(
-                UpPlatformSdkConstants.API_VERSION_STRING,
-                getMoveEventsListRequestParams(),
-                genericCallbackListener);
-        setContentView(R.layout.test_new_activity);
-        TextView tv = (TextView)findViewById(R.id.text);
-        tv.setText(str);
 /*
         ListView listView = getListView();
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -95,7 +82,21 @@ public class UpApiListActivity extends Activity {
             ApiManager.getRequestInterceptor().setAccessToken(mAccessToken);
             //listView.setOnItemClickListener(restApiListener());
         }
+
+        Log.e(TAG, "making Get Move Events List api call ...");
+        ApiManager.getRestApiInterface().getMoveEventsList(
+                UpPlatformSdkConstants.API_VERSION_STRING,
+                getMoveEventsListRequestParams(),
+                genericCallbackListener);
+
+        setContentView(R.layout.new_activity);
     }
+
+    public void refresh_str(View view){
+        TextView tv = (TextView)findViewById(R.id.text);
+        tv.setText(str_step);
+    }
+
 
     /**
      * Listener for the API listview, note that some API calls will not work because:
@@ -114,7 +115,7 @@ public class UpApiListActivity extends Activity {
                 }
                 Log.e(TAG, "position clicked is :" + position);
                 UpPlatformSdkConstants.RestApiRequestType apiRequestType = UpPlatformSdkConstants.RestApiRequestType.values()[position];
-                switch (apiRequestType) {
+                switch (apiRequestType) {/*
                     case GET_MEALS_EVENTS_LIST:
                         Log.e(TAG, "making Get Meal Events List api call ...");
                         ApiManager.getRestApiInterface().getMealEventsList(
@@ -153,15 +154,17 @@ public class UpApiListActivity extends Activity {
                                 getCreateOrUpdateMealEventRequestParams(),
                             genericCallbackListener);
                         break;
+
                     case GET_MOVES_EVENTS_LIST:
                         Log.e(TAG, "making Get Move Events List api call ...");
-                        Intent intent = new Intent(UpApiListActivity.this, TestNewActivity.class);
-                        startActivity(intent);
                         ApiManager.getRestApiInterface().getMoveEventsList(
                             UpPlatformSdkConstants.API_VERSION_STRING,
                             getMoveEventsListRequestParams(),
                             genericCallbackListener);
+                        Intent intent = new Intent(UpApiListActivity.this, TestNewActivity.class);
+                        startActivity(intent);
                         break;
+
                     case GET_MOVES_EVENT:
                         Log.e(TAG, "making Get Move Event api call ...");
                         ApiManager.getRestApiInterface().getMoveEvent(
@@ -421,6 +424,7 @@ public class UpApiListActivity extends Activity {
                             UpPlatformSdkConstants.API_VERSION_STRING,
                             genericCallbackListener);
                         break;
+                        */
                     default:
                         Log.e(TAG, "api endpoint not yet defined, position of clicked is:" + position );
                         break;
@@ -436,7 +440,8 @@ public class UpApiListActivity extends Activity {
         public void success(Object o, Response response) {
             Log.e(TAG,  "api call successful, json output: " + o.toString());
             str = o.toString() ;
-            Toast.makeText(getApplicationContext(), o.toString(), Toast.LENGTH_LONG).show();
+            str_step = str.substring(str.indexOf("了")+1, str.indexOf("步")+1);
+            //Toast.makeText(getApplicationContext(), str_step, Toast.LENGTH_LONG).show();
         }
 
         @Override

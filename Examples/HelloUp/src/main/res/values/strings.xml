@@ -5,5 +5,7 @@
     <string name="press_button_to_connect">Press button to connect</string>
     <string name="hello">HelloWorld</string>
     <string name="title_test_new_activity">Hello</string>
+    <string name="editTextHint">請輸入時間</string>
+    <string name="textViewText">時間長度:</string>
 
 </resources>

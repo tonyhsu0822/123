@@ -55,12 +55,14 @@ public class UpPlatformSdkConstants {
      * Different API calls, defined in an enum, to facilitate reuse.
      */
     public static enum RestApiRequestType {
-        GET_MEALS_EVENTS_LIST("Get Meals Events List"), //0
+        /*GET_MEALS_EVENTS_LIST("Get Meals Events List"), //0
         GET_MEALS_EVENT("Get Meals Event"), //1
         DELETE_MEAL("Delete Meal"), //2
         CREATE_MEAL("Create Meal"), //3
         UPDATE_MEAL("Update Meal"), //4
-        GET_MOVES_EVENTS_LIST("Get Moves Events List"), //5
+        */
+        GET_MOVES_EVENTS_LIST("Get Moves Events List"); //5
+        /*
         GET_MOVES_EVENT("Get Moves Event"), //6
         GET_MOVES_GRAPH("Get Moves Graph"), //7
         GET_MOVES_TICKS("Get Moves Ticks"), //8
@@ -98,7 +100,7 @@ public class UpPlatformSdkConstants {
         GET_TRENDS("Get Trends"), //40
         GET_USER("Get User"), //41
         GET_USERS_FRIENDS("Get Users Friends"); //42
-
+*/
         private String displayTitle;
 
         RestApiRequestType(String s) {

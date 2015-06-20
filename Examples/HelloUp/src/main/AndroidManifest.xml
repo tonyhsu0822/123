@@ -38,8 +38,7 @@
         </activity>
 
         <activity
-            android:name=".TestNewActivity"
-            android:parentActivityName=".UpApiListActivity">
+            android:name=".TestNewActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".UpApiListActivity" />
