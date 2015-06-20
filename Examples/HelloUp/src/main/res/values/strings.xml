@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Hello UP</string>
+    <string name="press_button_to_connect">Press button to connect</string>
+    <string name="hello">HelloWorld</string>
+    <string name="title_test_new_activity">Hello</string>
+
+</resources>
