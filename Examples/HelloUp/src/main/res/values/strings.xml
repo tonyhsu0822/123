@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Hello UP</string>
+    <string name="app_name">肥宅動一動</string>
     <string name="press_button_to_connect">Press button to connect</string>
     <string name="hello">HelloWorld</string>
     <string name="title_test_new_activity">Hello</string>
     <string name="editTextHint">請輸入時間</string>
     <string name="textViewText">時間長度:</string>
+    <string name="start_button_string">start</string>
+    <string name="title">肥宅動一動</string>
+    <string name="warning">每週身體活動量小於500大卡者，心血管疾病死亡率約40%、癌症率約26%</string>
 
 </resources>

@@ -6,15 +6,23 @@
 package com.jawbone.helloup;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,11 +98,88 @@ public class UpApiListActivity extends Activity {
                 genericCallbackListener);
 
         setContentView(R.layout.new_activity);
+        TextView tv = (TextView)findViewById(R.id.marquee);
+        tv.setSelected(true);
+        //tv.setEllipsize(TextUtils.TruncateAt.MARQUEE);
     }
 
-    public void refresh_str(View view){
+    public void start_countdown(View view){
+        /*
         TextView tv = (TextView)findViewById(R.id.text);
         tv.setText(str_step);
+        */
+        Log.e(TAG, "making Get Move Events List api call ...");
+        ApiManager.getRestApiInterface().getMoveEventsList(
+                UpPlatformSdkConstants.API_VERSION_STRING,
+                getMoveEventsListRequestParams(),
+                genericCallbackListener);
+
+        final int begin_step = Integer.parseInt(str_step);
+        final EditText etm = (EditText)findViewById(R.id.editText_minute);
+        final EditText ets = (EditText)findViewById(R.id.editText_second);
+        int minute, second;
+        if(etm.getText().toString().length() != 0)
+            minute = Integer.parseInt(etm.getText().toString());
+        else
+            minute = 0;
+        if(ets.getText().toString().length() != 0)
+            second = Integer.parseInt(ets.getText().toString());
+        else
+            second = 0;
+        CountDownTimer cdt = new CountDownTimer(minute*60000 + second*1000, 1000) {
+            @Override
+            public void onTick(long l) {
+                //etm.setText(Integer.toString((int)l/60000));
+                etm.setText(String.valueOf(l/60000));
+                ets.setText(String.valueOf((l%60000)/1000));
+                if(l/60000 == 0 && (l%60000)/1000 == 3){
+                    Log.e(TAG, "making Get Move Events List api call ...");
+                    ApiManager.getRestApiInterface().getMoveEventsList(
+                            UpPlatformSdkConstants.API_VERSION_STRING,
+                            getMoveEventsListRequestParams(),
+                            genericCallbackListener);
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                ets.setText(String.valueOf(0));
+                int end_step = Integer.parseInt(str_step);
+                if(end_step == begin_step){
+                    /*Toast.makeText(getApplicationContext(), "雷茲非常平衡", Toast.LENGTH_LONG).show();*/
+                    AlertDialog.Builder builder = new AlertDialog.Builder(UpApiListActivity.this);
+                    builder.setTitle("時間到囉");
+                    builder.setMessage("肥宅該起來動一動囉");
+                    builder.setPositiveButton("OK",
+                            new DialogInterface.OnClickListener(){
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // auto return
+                                }
+                            }
+                    );
+                    builder.show();
+                    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    Ringtone ring = RingtoneManager.getRingtone(getApplicationContext(), notification);
+                    ring.play();
+                }
+                else{
+                    AlertDialog.Builder builder = new AlertDialog.Builder(UpApiListActivity.this);
+                    builder.setTitle("好棒棒");
+                    builder.setMessage("你走了" + String.valueOf(end_step-begin_step) + "步，消耗了約"
+                                    + String.valueOf((end_step-begin_step)/20) + "大卡!");
+                    builder.setPositiveButton("OK",
+                            new DialogInterface.OnClickListener(){
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // auto return
+                                }
+                            }
+                    );
+                    builder.show();
+                }
+            }
+        }.start();
     }
 
 
@@ -440,7 +525,9 @@ public class UpApiListActivity extends Activity {
         public void success(Object o, Response response) {
             Log.e(TAG,  "api call successful, json output: " + o.toString());
             str = o.toString() ;
-            str_step = str.substring(str.indexOf("了")+1, str.indexOf("步")+1);
+            str_step = str.substring(str.indexOf("了")+1, str.indexOf("步"));
+            str_step = str_step.replaceAll(",","");
+            str_step = str_step.replaceAll(" ","");
             //Toast.makeText(getApplicationContext(), str_step, Toast.LENGTH_LONG).show();
         }
 
